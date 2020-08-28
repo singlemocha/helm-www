@@ -9,7 +9,7 @@ This part of the Best Practices Guide explains general conventions.
 
 ## Chart Names
 
-Chart names should be lower case letters and numbers. Words _may_ be separated
+Chart names must be lower case letters and numbers. Words _may_ be separated
 with dashes (-):
 
 Examples:
@@ -20,7 +20,7 @@ nginx-lego
 aws-cluster-autoscaler
 ```
 
-Neither uppercase letters nor underscores should be used in chart names. Dots
+Neither uppercase letters nor underscores can be used in chart names. Dots
 should not be used in chart names.
 
 The directory that contains a chart MUST have the same name as the chart. Thus,
@@ -48,6 +48,7 @@ There are a few conventions for using the words _Helm_ and _helm_.
 - _Helm_ refers to the project as a whole
 - `helm` refers to the client-side command
 - The term `chart` does not need to be capitalized, as it is not a proper noun
-- However, `Chart.yaml` does need to be capitalized because the file name is case sensitive
+- However, `Chart.yaml` does need to be capitalized because the file name is
+  case sensitive
 
 When in doubt, use _Helm_ (with an uppercase 'H').

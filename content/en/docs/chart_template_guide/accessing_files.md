@@ -1,7 +1,7 @@
 ---
 title: "Accessing Files Inside Templates"
 description: "How to access files from within a template."
-weight: 9
+weight: 10
 ---
 
 In the previous section we looked at several ways to create and access named
@@ -32,7 +32,8 @@ this works:
 - [Basic example](#basic-example)
 - [Path helpers](#path-helpers)
 - [Glob patterns](#glob-patterns)
-- [ConfigMap and Secrets utility functions](#configmap-and-secrets-utility-functions)
+- [ConfigMap and Secrets utility
+  functions](#configmap-and-secrets-utility-functions)
 - [Encoding](#encoding)
 - [Lines](#lines)
 
@@ -144,17 +145,19 @@ You have multiple options with Globs:
 
 
 ```yaml
-{{ range $path := .Files.Glob "**.yaml" }}
-{{ $path }}: |
-{{ .Files.Get $path }}
+{{ $currentScope := .}}
+{{ range $path, $_ :=  .Files.Glob  "**.yaml" }}
+    {{- with $currentScope}}
+        {{ .Files.Get $path }}
+    {{- end }}
 {{ end }}
 ```
 
 Or
 
 ```yaml
-{{ range $path, $bytes := .Files.Glob "foo/*" }}
-{{ $path }}: '{{ b64enc $bytes }}'
+{{ range $path, $_ :=  .Files.Glob  "**.yaml" }}
+      {{ $.Files.Get $path }}
 {{ end }}
 ```
 
@@ -231,12 +234,11 @@ data:
     {{ . }}{{ end }}
 ```
 
-There is no way to pass files external to the chart during `helm
-install`. So if you are asking users to supply data, it must be loaded using
-`helm install -f` or `helm install --set`.
+There is no way to pass files external to the chart during `helm install`. So if
+you are asking users to supply data, it must be loaded using `helm install -f`
+or `helm install --set`.
 
 This discussion wraps up our dive into the tools and techniques for writing Helm
 templates. In the next section we will see how you can use one special file,
 `templates/NOTES.txt`, to send post-installation instructions to the users of
 your chart.
-

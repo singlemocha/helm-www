@@ -2,14 +2,17 @@
 title: "Kubernetes Distribution Guide"
 description: "Captures information about using Helm in specific Kubernetes environments."
 aliases: ["/docs/kubernetes_distros/"]
+weight: 10
 ---
 
-This document captures information about using Helm in specific Kubernetes
-environments. Distros are sorted alphabetically so as to not imply any sort of
-preference.
+Helm should work with any [conformant version of
+Kubernetes](https://github.com/cncf/k8s-conformance) (whether
+[certified](https://www.cncf.io/certification/software-conformance/) or not).
 
-We are trying to add more details to this document. Please contribute via Pull
-Requests if you can.
+This document captures information about using Helm in specific Kubernetes
+environments. Please contribute more details about any distros (sorted
+alphabetically) if desired.
+
 
 ## AKS
 
@@ -20,6 +23,12 @@ Service](https://docs.microsoft.com/en-us/azure/aks/kubernetes-helm).
 
 Helm has been tested and is working on Mesospheres DC/OS 1.11 Kubernetes
 platform, and requires no additional configuration.
+
+## EKS
+
+Helm works with Amazon Elastic Kubernetes Service (Amazon EKS):
+[Using Helm with Amazon
+EKS](https://docs.aws.amazon.com/eks/latest/userguide/helm.html).
 
 ## GKE
 
@@ -34,7 +43,7 @@ Hyperkube you may need to do some manual configuration.
 ## IKS
 
 Helm works with [IBM Cloud Kubernetes
-Service](https://cloud.ibm.com/docs/containers?topic=containers-getting-started).
+Service](https://cloud.ibm.com/docs/containers?topic=containers-helm).
 
 ## KIND (Kubernetes IN Docker)
 
@@ -47,8 +56,8 @@ Helm works in clusters that are set up by KubeOne without caveats.
 ## Kubermatic
 
 Helm works in user clusters that are created by Kubermatic without caveats.
-Since seed cluster can be setup up in different ways Helm support depends on
-their configuration.
+Since seed cluster can be set up in different ways Helm support depends on their
+configuration.
 
 ## MicroK8s
 

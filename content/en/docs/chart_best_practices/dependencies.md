@@ -21,7 +21,7 @@ This will match version `1.2.3` and any patches to that release.  In other
 words, `~1.2.3` is equivalent to `>= 1.2.3, < 1.3.0`
 
 For the complete version matching syntax, please see the [semver
-documentation](https://github.com/Masterminds/semver#checking-version-constraints)
+documentation](https://github.com/Masterminds/semver#checking-version-constraints).
 
 ### Repository URLs
 
@@ -50,10 +50,10 @@ Where `somechart` is the chart name of the dependency.
 When multiple subcharts (dependencies) together provide an optional or swappable
 feature, those charts should share the same tags.
 
-For example, if both `nginx` and `memcached` together provided performance
-optimizations for the main app in the chart, and were required to both be
-present when that feature is enabled, then they might both have a tags section
-like this:
+For example, if both `nginx` and `memcached` together provide performance
+optimizations for the main app in the chart, and are required to both be present
+when that feature is enabled, then they should both have a tags section like
+this:
 
 ```yaml
 tags:

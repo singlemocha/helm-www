@@ -1,6 +1,7 @@
 ---
 title: "Migrating Helm v2 to v3"
 description: "Learn how to migrate Helm v2 to v3."
+weight: 13
 ---
 
 This guide shows how to migrate  Helm v2 to v3. Helm v2 needs to be installed
@@ -47,7 +48,8 @@ during migration:
    - `crd-install` hook removed and replaced with `crds` directory in chart
      where all CRDs defined in it will be installed before any rendering of the
      chart
-   - `test-failure` hook annotation value removed, and `test-success` deprecated. Use `test` instead
+   - `test-failure` hook annotation value removed, and `test-success`
+     deprecated. Use `test` instead
    - Commands removed/replaced/added:
        - delete --> uninstall : removes all release history by default
          (previously needed `--purge`)
@@ -59,8 +61,8 @@ during migration:
        - reset (removed)
        - serve (removed)
        - template: `-x`/`--execute` argument renamed to `-s`/`--show-only`
-       - upgrade: Added argument `--history-max` which limits the maximum number of
-         revisions saved per release (0 for no limit)
+       - upgrade: Added argument `--history-max` which limits the maximum number
+         of revisions saved per release (0 for no limit)
    - Helm 3 Go library has undergone a lot of changes and is incompatible with
      the Helm 2 library
    - Release binaries are now hosted on `get.helm.sh`
@@ -76,14 +78,14 @@ The migration use cases are as follows:
      deployed releases are updated/removed by v2 only
    - Helm v2 and v3 can quite happily manage the same cluster. The Helm versions
      can be installed on the same or separate systems
-   - If installing Helm v3 on the same system, you need to perform an
-     additional step to ensure that both client versions can co-exist until
-     ready to remove Helm v2 client. Rename or put the Helm v3 binary in a
-     different folder to avoid conflict
+   - If installing Helm v3 on the same system, you need to perform an additional
+     step to ensure that both client versions can co-exist until ready to remove
+     Helm v2 client. Rename or put the Helm v3 binary in a different folder to
+     avoid conflict
    - Otherwise there are no conflicts between both versions because of the
      following distinctions:
      - v2 and v3 release (history) storage are independent of each other. The
-       changes includes the Kubernetes resource for storage and the release
+       changes include the Kubernetes resource for storage and the release
        object metadata contained in the resource. Releases will also be on a per
        user namespace instead of using the Tiller namespace (for example, v2
        default Tiller namespace kube-system). v2 uses "ConfigMaps" or "Secrets"

@@ -180,22 +180,37 @@ somewhere. In Helm 2, this was stored in the same namespace as Tiller. In
 practice, this meant that once a name was used by a release, no other release
 could use that same name, even if it was deployed in a different namespace.
 
-In Helm 3, information about a particular release is now stored in the
-same namespace as the release itself. This means that users can now `helm
-install wordpress stable/wordpress` in two separate namespaces, and each can be
-referred with `helm list` by changing the current namespace context (e.g. `helm
-list --namespace foo`).
+In Helm 3, information about a particular release is now stored in the same
+namespace as the release itself. This means that users can now `helm install
+wordpress stable/wordpress` in two separate namespaces, and each can be referred
+with `helm list` by changing the current namespace context (e.g. `helm list
+--namespace foo`).
 
-With this greater alignment to native cluster namespaces, the `helm list` command
-no longer lists all releases by default. Instead, it will list only the releases
-in the namespace of your current kubernetes context (i.e. the namespace shown
-when you run `kubectl config view --minify`). It also means you must supply the
-`--all-namespaces` flag to `helm list` to get behaviour similar to Helm 2.
+With this greater alignment to native cluster namespaces, the `helm list`
+command no longer lists all releases by default. Instead, it will list only the
+releases in the namespace of your current kubernetes context (i.e. the namespace
+shown when you run `kubectl config view --minify`). It also means you must
+supply the `--all-namespaces` flag to `helm list` to get behaviour similar to
+Helm 2.
 
 ### Secrets as the default storage driver
 
-Helm 2 used ConfigMaps by default to store release information. In Helm 3,
-Secrets are now used as the default storage driver.
+In Helm 3, Secrets are now used as the [default storage
+driver](/docs/topics/advanced/#storage-backends). Helm 2 used ConfigMaps by
+default to store release information. In Helm 2.7.0, a new storage backend that
+uses Secrets for storing release information was implemented, and it is now the
+default starting in Helm 3.
+
+Changing to Secrets as the Helm 3 default allows for additional security in
+protecting charts in conjunction with the release of Secret encryption in
+Kubernetes.
+
+[Encrypting secrets at
+rest](https://kubernetes.io/docs/tasks/administer-cluster/encrypt-data/) became
+available as an alpha feature in Kubernetes 1.7 and became stable as of
+Kubernetes 1.13. This allows users to encrypt Helm release metadata at rest, and
+so it is a good starting point that can be expanded later into using something
+like Vault.
 
 ### Go import path changes
 
@@ -414,22 +429,25 @@ continue to use them in either form.
 
 When creating a release in a namespace that does not exist, Helm 2 created the
 namespace.  Helm 3 follows the behavior of other Kubernetes tooling and returns
-an error if the namespace does not exist.
+an error if the namespace does not exist.  Helm 3 will create the namespace if
+you explicitly specify `--create-namespace` flag.
 
 ## Installing
 
-### Why aren't there Debian/Fedora/... native packages of Helm?
+### Why aren't there native packages of Helm for Fedora and other Linux distros?
 
-We'd love to provide these or point you toward a trusted provider. If you're
-interested in helping, we'd love it. This is how the Homebrew formula was
-started.
+The Helm project does not maintain packages for operating systems and
+environments. The Helm community may provide native packages and if the Helm
+project is made aware of them they will be listed. This is how the Homebrew
+formula was started and listed. If you're interested in maintaining a package,
+we'd love it.
 
 ### Why do you provide a `curl ...|bash` script?
 
-There is a script in our repository (`scripts/get-helm-3`) that can be executed as a
-`curl ..|bash` script. The transfers are all protected by HTTPS, and the script
-does some auditing of the packages it fetches. However, the script has all the
-usual dangers of any shell script.
+There is a script in our repository (`scripts/get-helm-3`) that can be executed
+as a `curl ..|bash` script. The transfers are all protected by HTTPS, and the
+script does some auditing of the packages it fetches. However, the script has
+all the usual dangers of any shell script.
 
 We provide it because it is useful, but we suggest that users carefully read the
 script first. What we'd really like, though, are better packaged releases of
@@ -496,10 +514,10 @@ It is likely that you have missed the fact that Helm 3 now uses cluster
 namespaces throughout to scope releases. This means that for all commands
 referencing a release you must either:
 
-* rely on the current namespace in the active kubernetes context (as
-  described by the `kubectl config view --minify` command),
+* rely on the current namespace in the active kubernetes context (as described
+  by the `kubectl config view --minify` command),
 * specify the correct namespace using the `--namespace`/`-n` flag, or
 * for the `helm list` command, specify the `--all-namespaces`/`-A` flag
 
-This applies to `helm ls`, `helm uninstall`, and all other `helm`
-commands referencing a release.
+This applies to `helm ls`, `helm uninstall`, and all other `helm` commands
+referencing a release.

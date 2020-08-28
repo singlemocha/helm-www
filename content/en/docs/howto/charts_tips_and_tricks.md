@@ -91,11 +91,11 @@ context.
 
 Go provides a way for setting template options to control behavior when a map is
 indexed with a key that's not present in the map. This is typically set with
-`template.Options("missingkey=option")`, where `option` can be `default`, `zero`, or
-`error`. While setting this option to error will stop execution with an error,
-this would apply to every missing key in the map. There may be situations where
-a chart developer wants to enforce this behavior for select values in the
-`values.yaml` file.
+`template.Options("missingkey=option")`, where `option` can be `default`,
+`zero`, or `error`. While setting this option to error will stop execution with
+an error, this would apply to every missing key in the map. There may be
+situations where a chart developer wants to enforce this behavior for select
+values in the `values.yaml` file.
 
 The `required` function gives developers the ability to declare a value entry as
 required for template rendering. If the entry is empty in `values.yaml`, the
@@ -108,14 +108,14 @@ For example:
 {{ required "A valid foo is required!" .Values.foo }}
 ```
 
-The above will render the template when `.Values.foo` is defined, but will fail to
-render and exit when `.Values.foo` is undefined.
+The above will render the template when `.Values.foo` is defined, but will fail
+to render and exit when `.Values.foo` is undefined.
 
 ## Using the 'tpl' Function
 
-The `tpl` function allows developers to evaluate strings as templates inside a template.
-This is useful to pass a template string as a value to a chart or render external configuration files.
-Syntax: `{{ tpl TEMPLATE_STRING VALUES }}`
+The `tpl` function allows developers to evaluate strings as templates inside a
+template. This is useful to pass a template string as a value to a chart or
+render external configuration files. Syntax: `{{ tpl TEMPLATE_STRING VALUES }}`
 
 Examples:
 
@@ -131,7 +131,7 @@ name: "Tom"
 Tom
 ```
 
-Rendering a external configuration file:
+Rendering an external configuration file:
 
 ```yaml
 # external configuration file conf/app.conf
@@ -155,7 +155,7 @@ Image pull secrets are essentially a combination of _registry_, _username_, and
 _password_.  You may need them in an application you are deploying, but to
 create them requires running `base64` a couple of times.  We can write a helper
 template to compose the Docker configuration file for use as the Secret's
-payload.  Here is an example:
+payload.  Here is an example: 
 
 First, assume that the credentials are defined in the `values.yaml` file like
 so:
@@ -164,12 +164,15 @@ imageCredentials:
   registry: quay.io
   username: someone
   password: sillyness
+  email: someone@host.com
 ```
 
 We then define our helper template as follows:
 ```
 {{- define "imagePullSecret" }}
-{{- printf "{\"auths\": {\"%s\": {\"auth\": \"%s\"}}}" .Values.imageCredentials.registry (printf "%s:%s" .Values.imageCredentials.username .Values.imageCredentials.password | b64enc) | b64enc }}
+{{- with .Values.imageCredentials }}
+{{- printf "{\"auths\":{\"%s\":{\"username\":\"%s\",\"password\":\"%s\",\"email\":\"%s\",\"auth\":\"%s\"}}}" .registry .username .password .email (printf "%s:%s" .username .password | b64enc) | b64enc }}
+{{- end }}
 {{- end }}
 ```
 
@@ -188,7 +191,7 @@ data:
 ## Automatically Roll Deployments
 
 Often times ConfigMaps or Secrets are injected as configuration files in
-containers or there are other external dependencies changes that require rolling
+containers or there are other external dependency changes that require rolling
 pods. Depending on the application a restart may be required should those be
 updated with a subsequent `helm upgrade`, but if the deployment spec itself
 didn't change the application keeps running with the old configuration resulting
@@ -244,11 +247,12 @@ metadata:
 
 (Quotation marks are required)
 
-The annotation `"helm.sh/resource-policy": keep` instructs Helm to skip deleting this
-resource when a helm operation (such as `helm uninstall`, `helm upgrade` or `helm rollback`) 
-would result in its deletion. _However_, this resource becomes orphaned. Helm will no longer 
-manage it in any way. This can lead to problems if using `helm install --replace` on a release 
-that has already been uninstalled, but has kept resources.
+The annotation `"helm.sh/resource-policy": keep` instructs Helm to skip deleting
+this resource when a helm operation (such as `helm uninstall`, `helm upgrade` or
+`helm rollback`) would result in its deletion. _However_, this resource becomes
+orphaned. Helm will no longer manage it in any way. This can lead to problems if
+using `helm install --replace` on a release that has already been uninstalled,
+but has kept resources.
 
 ## Using "Partials" and Template Includes
 

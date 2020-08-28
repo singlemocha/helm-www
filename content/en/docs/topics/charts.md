@@ -1,7 +1,11 @@
 ---
 title: "Charts"
 description: "Explains the chart format, and provides basic guidance for building charts with Helm."
-aliases: ["docs/developing_charts/"]
+aliases: [
+  "docs/developing_charts/",
+  "developing_charts"
+]
+weight: 1
 ---
 
 Helm uses a packaging format called _charts_. A chart is a collection of files
@@ -9,8 +13,11 @@ that describe a related set of Kubernetes resources. A single chart might be
 used to deploy something simple, like a memcached pod, or something complex,
 like a full web app stack with HTTP servers, databases, caches, and so on.
 
-Charts are created as files laid out in a particular directory tree, then they
-can be packaged into versioned archives to be deployed.
+Charts are created as files laid out in a particular directory tree. They can be
+packaged into versioned archives to be deployed.
+
+If you want to download and look at the files for a published chart, without
+installing it, you can do so with `helm pull chartrepo/chartname`.
 
 This document explains the chart format, and provides basic guidance for
 building charts with Helm.
@@ -19,7 +26,7 @@ building charts with Helm.
 
 A chart is organized as a collection of files inside of a directory. The
 directory name is the name of the chart (without versioning information). Thus,
-a chart describing WordPress would be stored in the `wordpress/` directory.
+a chart describing WordPress would be stored in a `wordpress/` directory.
 
 Inside of this directory, Helm will expect a structure that matches this:
 
@@ -50,7 +57,7 @@ name: The name of the chart (required)
 version: A SemVer 2 version (required)
 kubeVersion: A SemVer range of compatible Kubernetes versions (optional)
 description: A single-sentence description of this project (optional)
-type: It is the type of chart (optional)
+type: The type of the chart (optional)
 keywords:
   - A list of keywords about this project (optional)
 home: The URL of this projects home page (optional)
@@ -66,7 +73,7 @@ dependencies: # A list of the chart requirements (optional)
     enabled: (optional) Enabled bool determines if chart should be loaded
     import-values: # (optional)
       - ImportValues holds the mapping of source values to parent key to be imported. Each item can be a string or pair of child/parent sublist items.
-    alias: (optional) Alias usable alias to be used for the chart. Useful when you have to add the same chart multiple times
+    alias: (optional) Alias to be used for the chart. Useful when you have to add the same chart multiple times
 maintainers: # (optional)
   - name: The maintainers name (required for each maintainer)
     email: The maintainers email (optional for each maintainer)
@@ -74,6 +81,8 @@ maintainers: # (optional)
 icon: A URL to an SVG or PNG image to be used as an icon (optional).
 appVersion: The version of the app that this contains (optional). This needn't be SemVer.
 deprecated: Whether this chart is deprecated (optional, boolean)
+annotations:
+  example: A list of annotations keyed by name (optional).
 ```
 
 Other fields will be silently ignored.
@@ -81,9 +90,9 @@ Other fields will be silently ignored.
 ### Charts and Versioning
 
 Every chart must have a version number. A version must follow the [SemVer
-2](https://semver.org/spec/v2.0.0.html) standard. Unlike Helm Classic, Kubernetes Helm uses
-version numbers as release markers. Packages in repositories are identified by
-name plus version.
+2](https://semver.org/spec/v2.0.0.html) standard. Unlike Helm Classic, Helm v2
+and later uses version numbers as release markers. Packages in repositories are
+identified by name plus version.
 
 For example, an `nginx` chart whose version field is set to `version: 1.2.3`
 will be named:
@@ -97,7 +106,7 @@ More complex SemVer 2 names are also supported, such as `version:
 system.
 
 **NOTE:** Whereas Helm Classic and Deployment Manager were both very GitHub
-oriented when it came to charts, Kubernetes Helm does not rely upon or require
+oriented when it came to charts, Helm v2 and later does not rely upon or require
 GitHub or even Git. Consequently, it does not use Git SHAs for versioning at
 all.
 
@@ -110,17 +119,17 @@ will cause an error.
 
 ### The `apiVersion` Field
 
-The `apiVersion` field should be `v2` for Helm charts that require at least
-Helm 3. Charts supporting previous Helm versions have an `apiVersion` set
-to `v1` and are still installable by Helm 3.
+The `apiVersion` field should be `v2` for Helm charts that require at least Helm
+3. Charts supporting previous Helm versions have an `apiVersion` set to `v1` and
+are still installable by Helm 3.
 
 Changes from `v1` to `v2`:
 
 - A `dependencies` field defining chart dependencies, which were located in a
-  separate `requirements.yaml` file for `v1` charts
-  (see [Chart Dependencies](#chart-dependencies)).
-- The `type` field, discriminating application and library charts
-  (see [Chart Types](#chart-types)).
+  separate `requirements.yaml` file for `v1` charts (see [Chart
+  Dependencies](#chart-dependencies)).
+- The `type` field, discriminating application and library charts (see [Chart
+  Types](#chart-types)).
 
 ### The `appVersion` Field
 
@@ -132,35 +141,36 @@ has no impact on chart version calculations.
 
 ### The `kubeVersion` Field
 
-The optional `kubeVersion` field can define semver constraints on supported 
-Kubernetes versions. Helm will validate the version constraints when installing 
-the chart and fail if the cluster runs an unsupported Kubernetes version. 
+The optional `kubeVersion` field can define semver constraints on supported
+Kubernetes versions. Helm will validate the version constraints when installing
+the chart and fail if the cluster runs an unsupported Kubernetes version.
 
-Version constraints may comprise space separated AND comparisons such as 
+Version constraints may comprise space separated AND comparisons such as
 ```
 >= 1.13.0 < 1.15.0
 ```
-which themselves can be combined with the OR `||` operator like in the 
-following example 
+which themselves can be combined with the OR `||` operator like in the following
+example
 ```
 >= 1.13.0 < 1.14.0 || >= 1.14.1 < 1.15.0
 ```
 In this example the version `1.14.0` is excluded, which can make sense if a bug
 in certain versions is known to prevent the chart from running properly.
 
-Apart from version constrains employing operators 
-`=` `!=` `>` `<` `>=` `<=` the following shorthand notations are supported
+Apart from version constrains employing operators `=` `!=` `>` `<` `>=` `<=` the
+following shorthand notations are supported
 
- * hyphen ranges for closed intervals, 
-  where `1.1 - 2.3.4` is equivalent to `>= 1.1 <= 2.3.4`.
- * wildcards `x`, `X` and `*`, where `1.2.x` is equivalent to `>= 1.2.0 < 1.3.0`.
- * tilde ranges (patch version changes allowed), 
- where `~1.2.3` is equivalent to `>= 1.2.3 < 1.3.0`. 
- * caret ranges (major version changes allowed), 
- where `^1.2.3` is equivalent to `>= 1.2.3 < 2.0.0`. 
+ * hyphen ranges for closed intervals, where `1.1 - 2.3.4` is equivalent to `>=
+   1.1 <= 2.3.4`.
+ * wildcards `x`, `X` and `*`, where `1.2.x` is equivalent to `>= 1.2.0 <
+   1.3.0`.
+ * tilde ranges (patch version changes allowed), where `~1.2.3` is equivalent to
+   `>= 1.2.3 < 1.3.0`.
+ * caret ranges (minor version changes allowed), where `^1.2.3` is equivalent to
+   `>= 1.2.3 < 2.0.0`.
 
-For a detailed explanation of supported semver constraints see 
-[Masterminds/semver](https://github.com/Masterminds/semver). 
+For a detailed explanation of supported semver constraints see
+[Masterminds/semver](https://github.com/Masterminds/semver).
 
 ### Deprecating Charts
 
@@ -168,24 +178,23 @@ When managing charts in a Chart Repository, it is sometimes necessary to
 deprecate a chart. The optional `deprecated` field in `Chart.yaml` can be used
 to mark a chart as deprecated. If the **latest** version of a chart in the
 repository is marked as deprecated, then the chart as a whole is considered to
-be deprecated. The chart name can later be reused by publishing a newer version
+be deprecated. The chart name can be later reused by publishing a newer version
 that is not marked as deprecated. The workflow for deprecating charts, as
 followed by the [kubernetes/charts](https://github.com/helm/charts) project is:
 
 1. Update chart's `Chart.yaml` to mark the chart as deprecated, bumping the
-  version
+   version
 2. Release the new chart version in the Chart Repository
 3. Remove the chart from the source repository (e.g. git)
 
 ### Chart Types
 
 The `type` field defines the type of chart. There are two types: `application`
-and `library`.  Application is the default type and it is the standard chart
-which can be operated on fully. The [library or helper
-chart](https://github.com/helm/charts/tree/master/incubator/common) provides
-utilities or functions for the chart builder. A library chart differs from an
-application chart because it has no resource object and is therefore not
-installable.
+and `library`. Application is the default type and it is the standard chart
+which can be operated on fully. The [library chart]({{< ref
+"/docs/topics/library_charts.md" >}}) provides utilities or functions for the
+chart builder. A library chart differs from an application chart because it is
+not installable and usually doesn't contain any resource objects.
 
 **Note:** An application chart can be used as a library chart. This is enabled
 by setting the type to `library`. The chart will then be rendered as a library
@@ -211,6 +220,9 @@ generally contain:
 - Descriptions of options in `values.yaml` and default values
 - Any other information that may be relevant to the installation or
   configuration of the chart
+
+When hubs and other user interfaces display details about a chart that detail is
+pulled from the content in the `README.md` file.
 
 The chart can also contain a short plain text `templates/NOTES.txt` file that
 will be printed out after installation, and when viewing the status of a
@@ -379,9 +391,9 @@ since the `subchart1.enabled` path evaluates to 'true' in the parent's values,
 the condition will override the `front-end` tag and `subchart1` will be enabled.
 
 Since `subchart2` is tagged with `back-end` and that tag evaluates to `true`,
-`subchart2` will be enabled. Also notes that although `subchart2` has a
-condition specified, there is no corresponding path and value in the parent's
-values so that condition has no effect.
+`subchart2` will be enabled. Also note that although `subchart2` has a condition
+specified, there is no corresponding path and value in the parent's values so
+that condition has no effect.
 
 ##### Using the CLI with Tags and Conditions
 
@@ -571,10 +583,10 @@ following order:
 
 - A-Namespace
 - B-Namespace
-- A-StatefulSet
-- B-ReplicaSet
 - A-Service
 - B-Service
+- B-ReplicaSet
+- A-StatefulSet
 
 This is because when Helm installs/upgrades charts, the Kubernetes objects from
 the charts and all its dependencies are
@@ -606,8 +618,8 @@ Values for the templates are supplied two ways:
 
 - Chart developers may supply a file called `values.yaml` inside of a chart.
   This file can contain default values.
-- Chart users may supply a YAML file that contains values. This can be
-  provided on the command line with `helm install`.
+- Chart users may supply a YAML file that contains values. This can be provided
+  on the command line with `helm install`.
 
 When a user supplies custom values, these values will override the values in the
 chart's `values.yaml` file.
@@ -685,17 +697,17 @@ cannot be overridden. As with all values, the names are _case sensitive_.
 - `Files`: A map-like object containing all non-special files in the chart. This
   will not give you access to templates, but will give you access to additional
   files that are present (unless they are excluded using `.helmignore`). Files
-  can be accessed using `{{ index .Files "file.name" }}` or using the `{{
-  .Files.Get name }}` or `{{ .Files.GetString name }}` functions. You can also
-  access the contents of the file as `[]byte` using `{{ .Files.GetBytes }}`
+  can be accessed using `{{ index .Files "file.name" }}` or using the
+  `{{.Files.Get name }}` function. You can also access the contents of the file
+  as `[]byte` using `{{ .Files.GetBytes }}`
 - `Capabilities`: A map-like object that contains information about the versions
   of Kubernetes (`{{ .Capabilities.KubeVersion }}` and the supported Kubernetes
   API versions (`{{ .Capabilities.APIVersions.Has "batch/v1" }}`)
 
 **NOTE:** Any unknown `Chart.yaml` fields will be dropped. They will not be
-accessible inside of the `Chart` object. Thus, `Chart.yaml` cannot be used to pass
-arbitrarily structured data into the template. The values file can be used for
-that, though.
+accessible inside of the `Chart` object. Thus, `Chart.yaml` cannot be used to
+pass arbitrarily structured data into the template. The values file can be used
+for that, though.
 
 ### Values files
 
@@ -743,8 +755,8 @@ Note that only the last field was overridden.
 values are simply converted to YAML on the client side.
 
 **NOTE:** If any required entries in the values file exist, they can be declared
-as required in the chart template by using the ['required'
-function]({{< ref "/docs/howto/charts_tips_and_tricks.md" >}})
+as required in the chart template by using the ['required' function]({{< ref
+"/docs/howto/charts_tips_and_tricks.md" >}})
 
 Any of these values are then accessible inside of templates using the `.Values`
 object:
@@ -831,9 +843,9 @@ apache:
 The above adds a `global` section with the value `app: MyWordPress`. This value
 is available to _all_ charts as `.Values.global.app`.
 
-For example, the `mysql` templates may access `app` as `{{ .Values.global.app
-}}`, and so can the `apache` chart. Effectively, the values file above is
-regenerated like this:
+For example, the `mysql` templates may access `app` as `{{
+.Values.global.app}}`, and so can the `apache` chart. Effectively, the values
+file above is regenerated like this:
 
 ```yaml
 title: "My WordPress Site" # Sent to the WordPress template
@@ -1077,9 +1089,9 @@ While `helm` can be used to manage local chart directories, when it comes to
 sharing charts, the preferred mechanism is a chart repository.
 
 Any HTTP server that can serve YAML files and tar files and can answer GET
-requests can be used as a repository server.
-The Helm team has tested some servers, including Google Cloud Storage with
-website mode enabled, and S3 with website mode enabled.
+requests can be used as a repository server. The Helm team has tested some
+servers, including Google Cloud Storage with website mode enabled, and S3 with
+website mode enabled.
 
 A repository is characterized primarily by the presence of a special file called
 `index.yaml` that has a list of all of the packages supplied by the repository,

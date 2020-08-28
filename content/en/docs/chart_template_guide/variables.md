@@ -1,7 +1,7 @@
 ---
 title: "Variables"
 description: "Using variables in templates."
-weight: 7
+weight: 8
 ---
 
 With functions, pipelines, objects, and control structures under our belts, we
@@ -123,7 +123,7 @@ block.
 
 However, there is one variable that is always global - `$` - this variable will
 always point to the root context.  This can be very useful when you are looping
-in a range need to know the chart's release name.
+in a range and you need to know the chart's release name.
 
 An example illustrating this:
 ```yaml

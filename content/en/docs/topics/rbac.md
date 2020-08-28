@@ -2,6 +2,7 @@
 title: "Role-based Access Control"
 description: "Explains how Helm interacts with Kubernetes' Role-Based Access Control."
 aliases: ["/docs/rbac/"]
+weight: 11
 ---
 
 In Kubernetes, granting roles to a user or an application-specific service
@@ -81,7 +82,7 @@ intended to be user-facing roles. They include super-user roles
 
 ## Restricting a user account's access using RBAC
 
-Now that we understand the basics or Role-based Access Control, let's discuss
+Now that we understand the basics of Role-based Access Control, let's discuss
 how an administrator can restrict a user's scope of access.
 
 ### Example: Grant a user read/write access to a particular namespace

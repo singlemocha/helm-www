@@ -3,7 +3,7 @@
   publish = "app"
 
 [build.environment]
-  HUGO_VERSION = "0.65.3"
+  HUGO_VERSION = "0.73.0"
   HUGO_ENABLEGITINFO = "true"
 
 [context.production.environment]
@@ -20,7 +20,22 @@
   from = "https://docs.helm.sh/"
   to = "https://helm.sh/docs/"
 
-# redirect docs subpages 
+# redirect docs subpages
 [[redirects]]
   from = "https://docs.helm.sh/*"
   to = "https://helm.sh/docs/:splat"
+
+[[redirects]]
+  from = "/docs/developing_charts/"
+  to = "https://v2.helm.sh/docs/developing_charts/"
+
+# redirect Go package lookups
+[[redirects]]
+  from = "/helm/v3/*"
+  to = "/helm/v3"
+  status = 200
+
+[[redirects]]
+  from = "/helm/v2/*"
+  to = "/helm/v2"
+  status = 200

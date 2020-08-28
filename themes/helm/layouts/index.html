@@ -196,7 +196,7 @@ Helm
           </dl>
 
           <h2 class="subtitle">
-            <a href="http://slack.k8s.io/">Request access here</a> to join the Kubernetes Slack team.
+            {{ T "community_slack_join" | markdownify }}
           </h2>
         </section>
       </div>
@@ -214,10 +214,8 @@ Helm
   </section>
 
   {{ partial "footer.html" . }}
-  {{ partial "footer-links.html" . }}
-  
 </div> <!-- / #helm .page-home -->
 
-{{ end }}
-{{ define "footer" }}
+{{ partial "footer-links.html" . }}
+
 {{ end }}

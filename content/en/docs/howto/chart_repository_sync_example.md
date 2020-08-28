@@ -17,8 +17,9 @@ which serves a chart repository.*
   on your GCS bucket in case you accidentally delete something._
 
 ## Set up a local chart repository directory
-Create a local directory like we did in [the chart repository
-guide]({{< ref "/docs/topics/chart_repository.md" >}}), and place your packaged charts in that directory.
+Create a local directory like we did in [the chart repository guide]({{< ref
+"/docs/topics/chart_repository.md" >}}), and place your packaged charts in that
+directory.
 
 For example:
 ```console
@@ -33,7 +34,7 @@ and the url of the remote repository to the `helm repo index` command like this:
 ```console
 $ helm repo index fantastic-charts/ --url https://fantastic-charts.storage.googleapis.com
 ```
-This will generate an updated index.yaml file and place in the
+This will generate an updated index.yaml file and place it in the
 `fantastic-charts/` directory.
 
 ## Sync your local and remote chart repositories

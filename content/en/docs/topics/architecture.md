@@ -2,9 +2,10 @@
 title: "Helm Architecture"
 description: "Describes the Helm architecture at a high level."
 aliases: ["/docs/architecture/"]
+weight: 8
 ---
 
-# The Kubernetes Helm Architecture
+# Helm Architecture
 
 This document describes the Helm architecture at a high level.
 

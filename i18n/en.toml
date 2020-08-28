@@ -4,15 +4,21 @@
 [action_get_started]
 other = "Get Started"
 
+[action_get_started_link]
+other = "/docs/intro/quickstart"
+
+[action_translate]
+other = "Translate this page"
+
+[action_translate_link]
+other = "https://github.com/helm/helm-www#internationalization--translation"
+
 [action_copy]
 other = "Copy"
 
 ## site-wide banner about versioning
 [banner_1]
-other = "You are viewing info for Helm 3 - check the **[version FAQs](https://helm.sh/docs/faq/)** or **[see to Helm 2](https://v2.helm.sh)** for prior versions."
-
-[banner_2]
-other = "Viewing **Helm 3** release. For **Helm 2** go [here](https://v2.helm.sh/)."
+other = "[Racism is unacceptable, is incompatible with the Helm project goals, and has no place in our open source community. #BlackLivesMatter](https://docs.google.com/document/d/1a-lzdtxOlWuzYNGqwlYwxMWADtZ6vJGCpKhtJHHrS54/preview?pru=AAABcqVvUdo*ducxvc88kzBetsUXsohi7A)"
 
 ## footer
 [footer_support_title]
@@ -22,7 +28,7 @@ other = "Helm is supported by and built with a community of over 400 developers.
 other = "...and many other wonderful [helm](https://github.com/helm/helm/blob/master/OWNERS) and [charts](https://github.com/helm/charts/blob/master/OWNERS) core maintainers."
 
 [footer_cncf_status]
-other = "We are a Cloud Native Computing Foundation incubating project."
+other = "We are a Cloud Native Computing Foundation graduated project."
 
 # homepage copy
 
@@ -43,7 +49,7 @@ Helm helps you manage Kubernetes applications — Helm Charts help you define, i
 
 Charts are easy to create, version, share, and publish — so start using Helm and stop the copy-and-paste.
 
-Helm is an incubator project in the [CNCF](https://cncf.io) and is maintained by the [Helm community](https://github.com/helm/community).
+Helm is a graduated project in the [CNCF](https://cncf.io) and is maintained by the [Helm community](https://github.com/helm/community).
 
 ### Learn more:
 
@@ -173,7 +179,7 @@ other = "Charts"
 other = "Discussion for users and contributors to Helm Charts."
 
 [community_slack_join]
-other = "[Request access here](http://slack.k8s.io/) to join the Kubernetes Slack team."
+other = "[Request access here](https://slack.k8s.io/) to join the Kubernetes Slack team."
 
 [community_contrib_title]
 other = "Contributing"
